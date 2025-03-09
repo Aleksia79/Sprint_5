@@ -1,6 +1,8 @@
-from src.config import Config
+import pytest
+
 from src.locators import StellarBurgersLocators
 
+@pytest.mark.usefixtures("main_page")
 class TestStellarBurgersConstructor:
     # Переход к разделу "Булки"
     def test_switch_to_buns_section_true(self, driver):

@@ -1,4 +1,4 @@
-import time
+import pytest
 
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -7,6 +7,7 @@ from src.config import Config
 from src.locators import StellarBurgersLocators
 from src.helpers import generate_name_email_password
 
+@pytest.mark.usefixtures("main_page")
 class TestStellarBurgersRegistration:
 
     # Регистрация с корректными данными
@@ -17,12 +18,8 @@ class TestStellarBurgersRegistration:
         driver.find_element(*StellarBurgersLocators.REGISTRATION_EMAIL_FIELD).send_keys(email_data)
         driver.find_element(*StellarBurgersLocators.REGISTRATION_PASSWORD_FIELD).send_keys(password_data)
         driver.find_element(*StellarBurgersLocators.REGISTRATION_BUTTON).click()
-        WebDriverWait(driver, 5).until(EC.url_to_be(f'{Config.URL}login'))
+        WebDriverWait(driver, 3).until(EC.visibility_of_element_located(StellarBurgersLocators.AUTH_BUTTON))
         assert '/login' in driver.current_url
-        # почему-то не работает в WebdriverWait выражение ниже
-        # WebDriverWait(driver, 3).until(EC.visibility_of_element_located(StellarBurgersLocators.AUTH_BUTTON)
-        # также пробовала напрямую (ниже), но не работает
-        # WebDriverWait(driver, 3).until(EC.visibility_of_element_located(By.XPATH, ".//main/div/form/button")
 
 
     # Регистрация с некорректным паролем
@@ -32,7 +29,5 @@ class TestStellarBurgersRegistration:
         driver.find_element(*StellarBurgersLocators.REGISTRATION_EMAIL_FIELD).send_keys("alexdianova19111@yandeх.ru")
         driver.find_element(*StellarBurgersLocators.REGISTRATION_PASSWORD_FIELD).send_keys("1")
         driver.find_element(*StellarBurgersLocators.REGISTRATION_BUTTON).click()
-        # почему-то в моем Selenium в WebDriverWait не работают выражения 'By.' для поиска элементов
         WebDriverWait(driver, 3).until(EC.visibility_of_element_located(StellarBurgersLocators.REGISTRATION_MESSAGE_PASSWORD))
         assert driver.find_element(*StellarBurgersLocators.REGISTRATION_MESSAGE_PASSWORD).text == 'Некорректный пароль'
-        # driver.quit()

@@ -9,7 +9,7 @@ from src.locators import StellarBurgersLocators
 from src.data import Data
 
 # фикстура для создания драйвера на Chrome
-@pytest.fixture
+@pytest.fixture(scope="class")
 def driver():
     chrome = webdriver.Chrome()
     chrome.get(Config.URL)
@@ -27,3 +27,17 @@ def auth_driver():
     WebDriverWait(driver_noexit, 3).until(EC.visibility_of_element_located((StellarBurgersLocators.BUTTON_ORDER)))
     yield driver_noexit
     driver_noexit.quit()
+
+# фикстура для класса TestStellarBurgersLogin для перехода на стартовую страницу для авторизованного пользователя
+@pytest.fixture(scope="function")
+def main_page_for_auth(auth_driver):
+    WebDriverWait(auth_driver, 3).until(EC.visibility_of_element_located(StellarBurgersLocators.BUTTON_LOGIN_PAGE))
+    return auth_driver.get(Config.URL)
+
+
+# фикстура для классов TestStellarBurgersRegistration, TestStellarBurgersConstructor и TestStellarBurgersAuthPage
+# для перехода на стартовую страницу для неавторизованного пользователя
+@pytest.fixture(scope="function")
+def main_page(driver):
+    WebDriverWait(driver, 3).until(EC.visibility_of_element_located(StellarBurgersLocators.BUTTON_LOGIN_PAGE))
+    return driver.get(Config.URL)

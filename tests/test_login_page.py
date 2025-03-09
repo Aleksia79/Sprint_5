@@ -4,12 +4,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from src.config import Config
 from src.locators import StellarBurgersLocators
 
+@pytest.mark.usefixtures("main_page_for_auth")
 class TestStellarBurgersLogin:
-    # фикстура для класса TestStellarBurgersLogin для старта тестов с главной страницы
-    @pytest.fixture(autouse=True)
-    def main_page(self, auth_driver):
-        WebDriverWait(auth_driver, 3).until(EC.visibility_of_element_located(StellarBurgersLocators.BUTTON_LOGIN_PAGE))
-        return auth_driver.get(Config.URL)
 
     # авторизация с корректным заполненинием полей
     def test_autorization_with_correct_data_true(self, auth_driver):
@@ -39,4 +35,3 @@ class TestStellarBurgersLogin:
          auth_driver.find_element(*StellarBurgersLocators.BUTTON_EXIT_FROM_ACCOUNT).click()
          WebDriverWait(auth_driver, 3).until(EC.visibility_of_element_located(StellarBurgersLocators.AUTH_BUTTON))
          assert 'login' in auth_driver.current_url
-
