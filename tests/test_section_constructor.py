@@ -15,7 +15,6 @@ class TestStellarBurgersConstructor:
     def test_switch_to_sauces_section_true(self, driver):
         driver.find_element(*StellarBurgersLocators.BUTTON_SAUCES).click()
         assert driver.find_element(*StellarBurgersLocators.CURRENT_SAUCES)
-        # driver.quit()
 
     # Переход к разделу "Начинки"
     def test_switch_to_fillings_section_true(self, driver):
